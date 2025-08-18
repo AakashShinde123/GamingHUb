@@ -2,10 +2,12 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { googleSheetsService } from "./google-sheets";
+import { alertManager } from "./alert-manager";
 import { 
   insertCustomerSchema, 
   insertSessionSchema,
-  insertRevenueTargetSchema 
+  insertRevenueTargetSchema,
+  insertAlertSchema 
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -115,10 +117,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Alert routes
   app.get("/api/alerts", async (req, res) => {
     try {
-      const alerts = await storage.getUnreadAlerts();
+      const alerts = await storage.getAllAlerts();
       res.json(alerts);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch alerts" });
+    }
+  });
+
+  app.post("/api/alerts", async (req, res) => {
+    try {
+      const validatedData = insertAlertSchema.parse(req.body);
+      const alert = await storage.createAlert(validatedData);
+      res.status(201).json(alert);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid alert data" });
     }
   });
 
@@ -131,6 +143,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(alert);
     } catch (error) {
       res.status(500).json({ message: "Failed to mark alert as read" });
+    }
+  });
+
+  app.post("/api/alerts/check", async (req, res) => {
+    try {
+      await alertManager.checkAndCreateAlerts();
+      res.json({ message: "Alert check completed successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to run alert check" });
     }
   });
 
@@ -202,6 +223,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Initialize automatic Google Sheets export scheduling
   googleSheetsService.scheduleAutomaticExport();
+  
+  // Initialize alert manager
+  alertManager.initialize();
   
   return httpServer;
 }
