@@ -64,6 +64,12 @@
   --gaming-gradient-1: linear-gradient(135deg, var(--gaming-purple), var(--gaming-orange));
   --gaming-gradient-2: linear-gradient(135deg, var(--gaming-blue), var(--gaming-purple));
   --gaming-gradient-3: linear-gradient(135deg, var(--gaming-green), var(--gaming-blue));
+  
+  /* Enhanced gaming effects */
+  --gaming-glow: 0 0 20px rgba(154, 52, 205, 0.5);
+  --gaming-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  --card-hover: 0 8px 30px rgba(0, 0, 0, 0.2);
+  --button-glow: 0 0 15px rgba(154, 52, 205, 0.6);
 }
 
 .dark {
@@ -134,5 +140,22 @@
   
   .card-shadow {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-hover:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+  }
+  
+  .button-glow:hover {
+    box-shadow: 0 0 15px rgba(154, 52, 205, 0.6);
+  }
+  
+  .gradient-text {
+    background: var(--gaming-gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }

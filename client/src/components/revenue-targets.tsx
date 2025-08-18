@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { SettingsDialog } from "@/components/settings-dialog";
+import { Target } from "lucide-react";
 import type { RevenueTarget } from "@shared/schema";
 
 export function RevenueTargets() {
+  const [showSettings, setShowSettings] = useState(false);
   const { data: targets, isLoading } = useQuery<RevenueTarget[]>({
     queryKey: ['/api/targets'],
     refetchInterval: 30000,
@@ -41,9 +45,13 @@ export function RevenueTargets() {
   const monthlyTarget = getTargetByType('monthly');
 
   return (
-    <Card className="card-shadow">
-      <CardContent className="p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue Targets</h3>
+    <>
+      <Card className="card-shadow border-l-4 border-gaming-purple gaming-shadow">
+        <CardContent className="p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <div className="w-6 h-6 bg-gradient-to-r from-gaming-purple to-gaming-orange rounded mr-2"></div>
+            Revenue Targets
+          </h3>
         
         {isLoading ? (
           <div className="space-y-6">
@@ -138,11 +146,16 @@ export function RevenueTargets() {
         )}
 
         <Button
-          className="w-full mt-4 bg-gaming-purple hover:bg-purple-700 text-white"
+          onClick={() => setShowSettings(true)}
+          className="w-full mt-4 bg-gaming-purple hover:bg-purple-700 text-white transition-all duration-200 hover:scale-[1.02]"
         >
+          <Target className="w-4 h-4 mr-2" />
           Configure Targets
         </Button>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+
+      <SettingsDialog open={showSettings} onOpenChange={setShowSettings} />
+    </>
   );
 }
