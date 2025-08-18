@@ -56,17 +56,18 @@ export function ActiveCustomers() {
 
   const calculateRevenue = (session: ActiveSession) => {
     const hours = session.duration / 60;
-    const rate = parseFloat(session.station.hourlyRate);
+    const rate = parseFloat(session.hourlyRate);
     return Math.round(hours * rate);
   };
 
   const getInitials = (name: string) => {
+    if (!name || name.trim() === '') return '??';
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
 
   const getInitialsColor = (name: string) => {
     const colors = ['bg-gaming-blue', 'bg-gaming-purple', 'bg-gaming-green', 'bg-gaming-orange'];
-    const index = name.length % colors.length;
+    const index = name?.length ? name.length % colors.length : 0;
     return colors[index];
   };
 
@@ -122,17 +123,17 @@ export function ActiveCustomers() {
                     <tr key={session.id} className="hover:bg-gray-50">
                       <td className="py-3 px-2">
                         <div className="flex items-center">
-                          <div className={`w-8 h-8 ${getInitialsColor(session.customer.name)} rounded-full flex items-center justify-center mr-3`}>
+                          <div className={`w-8 h-8 ${getInitialsColor(session.customerName || '')} rounded-full flex items-center justify-center mr-3`}>
                             <span className="text-white text-xs font-medium">
-                              {getInitials(session.customer.name)}
+                              {getInitials(session.customerName || 'Unknown')}
                             </span>
                           </div>
                           <span className="text-sm font-medium text-gray-900">
-                            {session.customer.name}
+                            {session.customerName || 'Unknown Customer'}
                           </span>
                         </div>
                       </td>
-                      <td className="py-3 px-2 text-sm text-gray-600">{session.station.name}</td>
+                      <td className="py-3 px-2 text-sm text-gray-600">{session.stationName || 'Unknown Station'}</td>
                       <td className="py-3 px-2 text-sm text-gray-600">
                         {formatTime(session.startTime!)}
                       </td>

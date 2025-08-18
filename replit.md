@@ -1,56 +1,67 @@
-# Patil's Gaming Cafe Management System
+# Gaming Cafe Management System
 
-## Project Overview
-A comprehensive gaming cafe management system with revenue tracking, customer management, and automated alerts. Built with React frontend, Express backend, and PostgreSQL database.
+## Overview
 
-## Project Architecture
-- **Frontend**: React with TypeScript, Wouter for routing, TanStack Query for data fetching
-- **Backend**: Express.js with TypeScript, RESTful API endpoints
-- **Database**: PostgreSQL with Drizzle ORM
-- **Styling**: Tailwind CSS with shadcn/ui components
-- **Real-time Features**: Alerts system for revenue targets and cafe management
-
-## Key Features
-- Customer management (registration, phone lookup)
-- Gaming station management (PC/Console types, hourly rates)
-- Session tracking (active sessions, duration, billing)
-- Revenue tracking with targets (daily, weekly, monthly)
-- Automated alerts system
-- Dashboard with metrics and analytics
-- Google Sheets integration for reporting
-
-## Database Schema
-- `customers`: Customer information and contact details
-- `gaming_stations`: Station details, types, and rates
-- `sessions`: Gaming session tracking with billing
-- `revenue_targets`: Target setting and tracking
-- `alerts`: Notification system for important events
-- `activities`: Activity log for audit trail
-
-## Environment Variables Required
-- `DATABASE_URL`: PostgreSQL connection string (auto-provided by Replit)
-- `GOOGLE_SHEETS_CREDENTIALS`: For Google Sheets integration (optional)
-
-## Recent Changes
-- ✅ Fixed database connection and setup PostgreSQL
-- ✅ Implemented comprehensive alerts system with automated monitoring
-- ✅ Added gaming stations management in settings with delete functionality
-- ✅ Removed manual station adding as per user request
-- ✅ Created alert manager with intelligent revenue target monitoring
-- ✅ Set up real-time alert notifications in dashboard
+A full-stack gaming cafe management application built with React frontend and Express backend. The system provides real-time monitoring of gaming sessions, revenue tracking, station utilization, and alert management. Features include customer check-in/check-out, revenue target tracking, automated alerts, Google Sheets integration, and comprehensive dashboard analytics.
 
 ## User Preferences
-- Keep environment variables simple - user only wants to paste API keys
-- Alerts system should be fully functional with automated monitoring
-- Focus on practical gaming cafe operations
-- Gaming stations: delete functionality in settings, no manual adding
-- Prefer database-based station management over UI forms
 
-## Completed Features
-- Revenue target monitoring with automated alerts
-- Station management with safe deletion (checks for active sessions)
-- Real-time dashboard with alert notifications
-- Comprehensive settings panel with 5 tabs
-- Google Sheets integration framework
-- Alert severity levels (info, warning, error)
-- Automated alert generation based on time and performance
+Preferred communication style: Simple, everyday language.
+
+## System Architecture
+
+### Frontend Architecture
+- **Framework**: React with TypeScript using Vite as the build tool
+- **UI Components**: shadcn/ui component library with Radix UI primitives
+- **Styling**: Tailwind CSS with custom gaming-themed color palette and responsive design
+- **State Management**: TanStack Query (React Query) for server state management
+- **Routing**: Wouter for lightweight client-side routing
+- **Forms**: React Hook Form with Zod validation
+- **Charts**: Recharts library for data visualization
+
+### Backend Architecture
+- **Framework**: Express.js with TypeScript in ESM module format
+- **Database ORM**: Drizzle ORM with PostgreSQL dialect
+- **Session Management**: Custom session tracking with real-time updates
+- **Alert System**: Automated alert manager with configurable thresholds
+- **API Structure**: RESTful endpoints for CRUD operations on customers, stations, sessions, targets, and alerts
+
+### Database Design
+- **Core Entities**: Customers, Gaming Stations, Sessions, Revenue Targets, Alerts, Activities
+- **Session Tracking**: Active session monitoring with start/end times and billing calculations
+- **Revenue Management**: Hierarchical target tracking (daily/weekly/monthly) with progress monitoring
+- **Activity Logging**: Comprehensive audit trail for all system actions
+
+### Real-time Features
+- **Live Dashboard**: Auto-refreshing metrics every 30 seconds
+- **Session Monitoring**: Real-time station occupancy and customer activity
+- **Alert System**: Automated revenue threshold monitoring with severity levels
+- **Activity Feed**: Live updates of check-ins, check-outs, and system events
+
+### Data Management
+- **Revenue Calculations**: Automated billing based on session duration and station hourly rates
+- **Target Tracking**: Progressive revenue monitoring against configurable daily/weekly/monthly goals
+- **Utilization Analytics**: Real-time station occupancy rates and usage patterns
+- **Historical Reporting**: Session history and revenue trends with chart visualizations
+
+## External Dependencies
+
+### Database
+- **Neon PostgreSQL**: Serverless PostgreSQL database with connection pooling
+- **Drizzle Kit**: Database migration and schema management tool
+
+### Third-party Integrations
+- **Google Sheets API**: Optional daily data export functionality
+- **Google Fonts**: Roboto font family for consistent typography
+
+### UI and Styling
+- **Radix UI**: Accessible component primitives for dialogs, dropdowns, and form controls
+- **Tailwind CSS**: Utility-first CSS framework with custom design system
+- **Lucide React**: Icon library for consistent iconography
+- **Recharts**: Chart library for revenue trends and utilization visualization
+
+### Development Tools
+- **Replit Integration**: Development environment with hot reloading and error overlay
+- **TypeScript**: Type safety across frontend and backend
+- **ESBuild**: Fast JavaScript bundler for production builds
+- **PostCSS**: CSS processing with Tailwind and Autoprefixer plugins
