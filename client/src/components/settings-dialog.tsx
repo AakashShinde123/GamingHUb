@@ -55,6 +55,31 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     }
   }, [currentTargets]);
 
+  // Google Sheets export queries and mutations
+  const { data: exportStatus } = useQuery({
+    queryKey: ['/api/export/status'],
+    refetchInterval: false
+  });
+
+  const exportDailyDataMutation = useMutation({
+    mutationFn: async (date?: string) => {
+      return apiRequest('POST', '/api/export/daily', { date });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Export Successful",
+        description: "Daily data has been exported to Google Sheets",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Export Failed",
+        description: "Failed to export data. Check if Google Sheets is configured.",
+        variant: "destructive",
+      });
+    }
+  });
+
   const updateTargetsMutation = useMutation({
     mutationFn: async () => {
       const today = new Date().toISOString().split('T')[0];
@@ -311,7 +336,20 @@ ${new Date(Date.now() - 172800000).toLocaleDateString()},13800,20,80%
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Button
+                    onClick={() => exportDailyDataMutation.mutate()}
+                    disabled={exportDailyDataMutation.isPending}
+                    className="h-auto p-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 flex flex-col items-center gap-2"
+                  >
+                    <Download className="w-6 h-6" />
+                    <div>
+                      <div className="font-medium">
+                        {exportDailyDataMutation.isPending ? "Exporting..." : "Export to Google Sheets"}
+                      </div>
+                      <div className="text-xs opacity-90">Send daily data to Google Sheets</div>
+                    </div>
+                  </Button>
                   <Button
                     onClick={handleGenerateReport}
                     className="h-auto p-4 bg-gaming-blue hover:bg-blue-700 flex flex-col items-center gap-2"
@@ -333,6 +371,18 @@ ${new Date(Date.now() - 172800000).toLocaleDateString()},13800,20,80%
                     </div>
                   </Button>
                 </div>
+                {exportStatus && (
+                  <div className="text-center p-3 bg-muted rounded-lg">
+                    <p className="text-sm text-muted-foreground">
+                      Google Sheets Integration: {exportStatus.enabled ? "✅ Configured" : "❌ Not configured"}
+                    </p>
+                    {!exportStatus.enabled && (
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Configure GOOGLE_SHEETS_API_KEY and GOOGLE_SHEETS_ID to enable automatic exports
+                      </p>
+                    )}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>

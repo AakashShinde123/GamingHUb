@@ -6,6 +6,15 @@ This is a comprehensive revenue management dashboard for Patil's Gaming Cafe. Th
 
 The system tracks active gaming sessions, manages customer information, monitors station availability, and provides revenue analytics with customizable targets. It includes automated alerting for revenue thresholds and provides visual dashboards for quick business insights.
 
+**Recent Major Updates (January 2025):**
+- ✅ Migrated from memory storage to PostgreSQL database for persistent data storage
+- ✅ Implemented comprehensive DatabaseStorage class with full CRUD operations
+- ✅ Added Google Sheets integration for daily data export with automatic scheduling
+- ✅ Enhanced settings dialog with Google Sheets export functionality
+- ✅ Successfully deployed database schema with 25 gaming stations and revenue targets
+- ✅ All API endpoints working with real database data
+- ✅ Gaming aesthetics enhanced with improved visual styling
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.

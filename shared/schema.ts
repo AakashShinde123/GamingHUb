@@ -108,9 +108,10 @@ export type InsertActivity = z.infer<typeof insertActivitySchema>;
 
 // Additional types for API responses
 export type ActiveSession = Session & {
-  customer: Customer;
-  station: GamingStation;
+  customerName: string;
+  stationName: string;
   duration: number; // in minutes
+  hourlyRate: string;
 };
 
 export type DashboardMetrics = {
@@ -134,7 +135,7 @@ export type StationUtilization = {
   occupied: number;
   available: number;
   pcOccupied: number;
-  pcTotal: number;
+  pcAvailable: number;
   consoleOccupied: number;
-  consoleTotal: number;
+  consoleAvailable: number;
 };

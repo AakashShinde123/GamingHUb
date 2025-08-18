@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { googleSheetsService } from "./google-sheets";
 import { 
   insertCustomerSchema, 
   insertSessionSchema,
@@ -164,6 +165,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Google Sheets export routes
+  app.post("/api/export/daily", async (req, res) => {
+    try {
+      const { date } = req.body;
+      const exportDate = date ? new Date(date) : new Date();
+      const success = await googleSheetsService.exportDailyData(exportDate);
+      
+      if (success) {
+        res.json({ 
+          message: "Daily data export completed successfully",
+          date: exportDate.toISOString().split('T')[0],
+          configured: googleSheetsService.isConfigured()
+        });
+      } else {
+        res.status(500).json({ 
+          message: "Failed to export daily data",
+          configured: googleSheetsService.isConfigured()
+        });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Export failed" });
+    }
+  });
+
+  app.get("/api/export/status", async (req, res) => {
+    try {
+      const status = googleSheetsService.getConfigStatus();
+      res.json(status);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get export status" });
+    }
+  });
+
   const httpServer = createServer(app);
+  
+  // Initialize automatic Google Sheets export scheduling
+  googleSheetsService.scheduleAutomaticExport();
+  
   return httpServer;
 }
