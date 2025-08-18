@@ -27,6 +27,7 @@ export interface IStorage {
   getGamingStationByName(name: string): Promise<GamingStation | undefined>;
   createGamingStation(station: InsertGamingStation): Promise<GamingStation>;
   getAllGamingStations(): Promise<GamingStation[]>;
+  deleteGamingStation(id: string): Promise<boolean>;
 
   // Session methods
   getSession(id: string): Promise<Session | undefined>;
@@ -187,6 +188,26 @@ export class DatabaseStorage implements IStorage {
 
   async getAllGamingStations(): Promise<GamingStation[]> {
     return await db.select().from(gamingStations).orderBy(gamingStations.name);
+  }
+
+  async deleteGamingStation(id: string): Promise<boolean> {
+    try {
+      // Check if station has any active sessions
+      const activeSessions = await db.select().from(sessions)
+        .where(and(eq(sessions.stationId, id), eq(sessions.isActive, true)));
+      
+      if (activeSessions.length > 0) {
+        throw new Error("Cannot delete station with active sessions");
+      }
+
+      const result = await db.delete(gamingStations)
+        .where(eq(gamingStations.id, id));
+      
+      return result.rowCount !== null && result.rowCount > 0;
+    } catch (error) {
+      console.error('Error deleting gaming station:', error);
+      return false;
+    }
   }
 
   // Session methods

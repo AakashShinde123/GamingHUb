@@ -53,6 +53,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.delete("/api/stations/:id", async (req, res) => {
+    try {
+      const success = await storage.deleteGamingStation(req.params.id);
+      if (!success) {
+        return res.status(404).json({ message: "Gaming station not found" });
+      }
+      res.json({ message: "Gaming station deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete gaming station" });
+    }
+  });
+
   // Session routes
   app.get("/api/sessions/active", async (req, res) => {
     try {

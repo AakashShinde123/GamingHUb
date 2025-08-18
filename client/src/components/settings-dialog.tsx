@@ -17,9 +17,11 @@ import {
   Settings, 
   Gamepad2,
   Monitor,
-  Save
+  Save,
+  Trash2,
+  AlertTriangle
 } from "lucide-react";
-import type { RevenueTarget } from "@shared/schema";
+import type { RevenueTarget, GamingStation } from "@shared/schema";
 
 interface SettingsDialogProps {
   open: boolean;
@@ -40,6 +42,11 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const { data: currentTargets } = useQuery({
     queryKey: ['/api/targets'],
     select: (data: RevenueTarget[]) => data
+  });
+
+  const { data: stations } = useQuery({
+    queryKey: ['/api/stations'],
+    select: (data: GamingStation[]) => data
   });
 
   // Update state when targets load
@@ -75,6 +82,26 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
       toast({
         title: "Export Failed",
         description: "Failed to export data. Check if Google Sheets is configured.",
+        variant: "destructive",
+      });
+    }
+  });
+
+  const deleteStationMutation = useMutation({
+    mutationFn: async (stationId: string) => {
+      return apiRequest('DELETE', `/api/stations/${stationId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/stations'] });
+      toast({
+        title: "Station Deleted",
+        description: "Gaming station has been removed successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Delete Failed",
+        description: "Failed to delete gaming station. It may have active sessions.",
         variant: "destructive",
       });
     }
@@ -230,10 +257,14 @@ ${new Date(Date.now() - 172800000).toLocaleDateString()},13800,20,80%
         </DialogHeader>
 
         <Tabs defaultValue="targets" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="targets" className="flex items-center gap-2">
               <Target className="w-4 h-4" />
               Targets
+            </TabsTrigger>
+            <TabsTrigger value="stations" className="flex items-center gap-2">
+              <Gamepad2 className="w-4 h-4" />
+              Stations
             </TabsTrigger>
             <TabsTrigger value="alerts" className="flex items-center gap-2">
               <Bell className="w-4 h-4" />
@@ -294,6 +325,57 @@ ${new Date(Date.now() - 172800000).toLocaleDateString()},13800,20,80%
             </Card>
           </TabsContent>
 
+          <TabsContent value="stations" className="space-y-6">
+            <Card className="border-l-4 border-gaming-blue">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Gamepad2 className="w-5 h-5 text-gaming-blue" />
+                  Gaming Stations Management
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {stations?.map((station) => (
+                    <div
+                      key={station.id}
+                      className="p-4 border rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 transition-all"
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-3 h-3 rounded-full ${station.isActive ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                          <h4 className="font-medium text-gray-900">{station.name}</h4>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => deleteStationMutation.mutate(station.id)}
+                          disabled={deleteStationMutation.isPending}
+                          className="h-8 w-8 p-0 hover:bg-red-50 hover:border-red-300"
+                        >
+                          <Trash2 className="h-4 w-4 text-red-600" />
+                        </Button>
+                      </div>
+                      <div className="space-y-1 text-sm text-gray-600">
+                        <p>Type: <span className="font-medium">{station.type}</span></p>
+                        <p>Rate: <span className="font-medium text-gaming-green">₹{station.hourlyRate}/hour</span></p>
+                        <p>Status: <span className={`font-medium ${station.isActive ? 'text-green-600' : 'text-red-600'}`}>
+                          {station.isActive ? 'Active' : 'Inactive'}
+                        </span></p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex items-center gap-2 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <AlertTriangle className="w-5 h-5 text-yellow-600" />
+                  <div className="text-sm">
+                    <p className="font-medium text-yellow-800">Station Management</p>
+                    <p className="text-yellow-700">You can only delete stations that don't have active gaming sessions. New stations should be added manually to the database.</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           <TabsContent value="alerts" className="space-y-6">
             <Card className="border-l-4 border-gaming-orange">
               <CardHeader>
@@ -338,7 +420,7 @@ ${new Date(Date.now() - 172800000).toLocaleDateString()},13800,20,80%
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Button
-                    onClick={() => exportDailyDataMutation.mutate()}
+                    onClick={() => exportDailyDataMutation.mutate(undefined)}
                     disabled={exportDailyDataMutation.isPending}
                     className="h-auto p-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 flex flex-col items-center gap-2"
                   >
@@ -374,9 +456,9 @@ ${new Date(Date.now() - 172800000).toLocaleDateString()},13800,20,80%
                 {exportStatus && (
                   <div className="text-center p-3 bg-muted rounded-lg">
                     <p className="text-sm text-muted-foreground">
-                      Google Sheets Integration: {exportStatus.enabled ? "✅ Configured" : "❌ Not configured"}
+                      Google Sheets Integration: {(exportStatus as any)?.enabled ? "✅ Configured" : "❌ Not configured"}
                     </p>
-                    {!exportStatus.enabled && (
+                    {!(exportStatus as any)?.enabled && (
                       <p className="text-xs text-muted-foreground mt-1">
                         Configure GOOGLE_SHEETS_API_KEY and GOOGLE_SHEETS_ID to enable automatic exports
                       </p>
