@@ -36,7 +36,7 @@ export default function Dashboard() {
               </div>
               <div>
                 <h1 className="text-xl font-bold bg-gradient-to-r from-gaming-purple to-gaming-orange bg-clip-text text-transparent">
-                  Patil's Gaming Cafe
+                  PlayHub
                 </h1>
                 <p className="text-sm text-gray-600 font-medium">Revenue Management Dashboard</p>
               </div>

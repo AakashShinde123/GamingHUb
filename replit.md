@@ -1,8 +1,8 @@
-# Gaming Cafe Management System
+# PlayHub Management System
 
 ## Overview
 
-A full-stack gaming cafe management application built with React frontend and Express backend. The system provides real-time monitoring of gaming sessions, revenue tracking, station utilization, and alert management. Features include customer check-in/check-out, revenue target tracking, automated alerts, Google Sheets integration, and comprehensive dashboard analytics.
+A full-stack gaming center management application built with React frontend and Express backend for PlayHub. The system provides real-time monitoring of gaming sessions, revenue tracking, station utilization, and alert management. Features include customer check-in/check-out, revenue target tracking, automated alerts, Google Sheets integration, and comprehensive dashboard analytics.
 
 ## User Preferences
 
