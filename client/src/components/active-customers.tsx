@@ -121,7 +121,7 @@ export function ActiveCustomers() {
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {activeSessions?.map((session) => (
-                    <tr key={session.id} className="hover:bg-gray-50">
+                    <tr key={session.id} className="hover:bg-blue-50 transition-colors group">
                       <td className="py-3 px-2">
                         <div className="flex items-center">
                           <div className={`w-8 h-8 ${getInitialsColor(session.customerName || '')} rounded-full flex items-center justify-center mr-3`}>
@@ -149,9 +149,10 @@ export function ActiveCustomers() {
                           size="sm"
                           onClick={() => checkOutMutation.mutate(session.id)}
                           disabled={checkOutMutation.isPending}
-                          className="bg-gaming-orange hover:bg-orange-600 text-white"
+                          className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 opacity-75 group-hover:opacity-100 group-hover:scale-105 transition-all duration-200 shadow-lg"
+                          data-testid="button-checkout"
                         >
-                          <LogOut className="w-3 h-3 mr-1" />
+                          <LogOut className="w-4 h-4 mr-2" />
                           Check Out
                         </Button>
                       </td>

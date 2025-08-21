@@ -10,6 +10,7 @@ import { RecentActivity } from "@/components/recent-activity";
 import { RevenueTargets } from "@/components/revenue-targets";
 import { SettingsDialog } from "@/components/settings-dialog";
 import { CheckInDialog } from "@/components/check-in-dialog";
+import { StationManagement } from "@/components/station-management";
 import { Gamepad2, User, Bell, Settings, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -120,12 +121,17 @@ export default function Dashboard() {
           <StationUtilization />
         </div>
 
-        {/* Customer Management & Gaming Stations */}
+        {/* Customer Management & Quick Actions */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           <div className="lg:col-span-2">
             <ActiveCustomers />
           </div>
           <QuickActions />
+        </div>
+
+        {/* Gaming Stations Management */}
+        <div className="mb-8">
+          <StationManagement />
         </div>
 
         {/* Recent Activity & Revenue Alerts */}
