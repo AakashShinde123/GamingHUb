@@ -30,22 +30,29 @@ export function StationManagement() {
 
   const createStationMutation = useMutation({
     mutationFn: async (data: any) => {
-      return apiRequest('POST', '/api/stations', data);
+      console.log('Creating station with data:', data);
+      const response = await apiRequest('POST', '/api/stations', data);
+      console.log('Station created response:', response);
+      return response;
     },
-    onSuccess: () => {
+    onSuccess: (response) => {
+      console.log('Station creation successful:', response);
       queryClient.invalidateQueries({ queryKey: ['/api/stations'] });
       queryClient.invalidateQueries({ queryKey: ['/api/dashboard/utilization'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/dashboard/metrics'] });
+      const stationName = formData.name; // Use form data since we have it
       setShowAddDialog(false);
       setFormData({ name: "", type: "PC Gaming", hourlyRate: "", isActive: true });
       toast({
-        title: "Station Created",
-        description: "Gaming station has been added successfully",
+        title: "Success!",
+        description: `Gaming station "${stationName}" has been created successfully`,
       });
     },
-    onError: () => {
+    onError: (error) => {
+      console.error('Station creation error:', error);
       toast({
         title: "Error",
-        description: "Failed to create gaming station",
+        description: "Failed to create gaming station. Please check all fields.",
         variant: "destructive",
       });
     }
@@ -97,10 +104,34 @@ export function StationManagement() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate required fields
+    if (!formData.name.trim()) {
+      toast({
+        title: "Error",
+        description: "Station name is required",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!formData.hourlyRate || parseFloat(formData.hourlyRate) <= 0) {
+      toast({
+        title: "Error", 
+        description: "Valid hourly rate is required",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const data = {
-      ...formData,
-      hourlyRate: parseFloat(formData.hourlyRate)
+      name: formData.name.trim(),
+      type: formData.type,
+      hourlyRate: parseFloat(formData.hourlyRate),
+      isActive: formData.isActive
     };
+
+    console.log('Submitting station data:', data);
 
     if (editingStation) {
       updateStationMutation.mutate({ id: editingStation.id, ...data });
