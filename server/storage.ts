@@ -5,11 +5,12 @@ import {
   type RevenueTarget, type InsertRevenueTarget,
   type Alert, type InsertAlert,
   type Activity, type InsertActivity,
+  type SystemSettings, type InsertSystemSettings,
   type ActiveSession,
   type DashboardMetrics,
   type RevenueData,
   type StationUtilization,
-  customers, gamingStations, sessions, revenueTargets, alerts, activities
+  customers, gamingStations, sessions, revenueTargets, alerts, activities, systemSettings
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, desc, gte, lte, sql } from "drizzle-orm";
@@ -52,6 +53,11 @@ export interface IStorage {
   // Activity methods
   createActivity(activity: InsertActivity): Promise<Activity>;
   getRecentActivities(limit?: number): Promise<Activity[]>;
+
+  // System Settings methods
+  getSystemSettings(): Promise<SystemSettings | undefined>;
+  updateSystemSettings(updates: Partial<InsertSystemSettings>): Promise<SystemSettings | undefined>;
+  initializeSystemSettings(): Promise<SystemSettings>;
 
   // Dashboard methods
   getDashboardMetrics(): Promise<DashboardMetrics>;
@@ -603,6 +609,65 @@ export class DatabaseStorage implements IStorage {
         consoleOccupied: 0,
         consoleAvailable: 5
       };
+    }
+  }
+
+  // System Settings methods
+  async getSystemSettings(): Promise<SystemSettings | undefined> {
+    try {
+      const result = await db.select().from(systemSettings).limit(1);
+      return result[0];
+    } catch (error) {
+      console.error('Error getting system settings:', error);
+      throw error;
+    }
+  }
+
+  async updateSystemSettings(updates: Partial<InsertSystemSettings>): Promise<SystemSettings | undefined> {
+    try {
+      const existingSettings = await this.getSystemSettings();
+      if (!existingSettings) {
+        // Initialize if doesn't exist
+        return await this.initializeSystemSettings();
+      }
+
+      const result = await db
+        .update(systemSettings)
+        .set({ ...updates, updatedAt: new Date() })
+        .where(eq(systemSettings.id, existingSettings.id))
+        .returning();
+      
+      return result[0];
+    } catch (error) {
+      console.error('Error updating system settings:', error);
+      throw error;
+    }
+  }
+
+  async initializeSystemSettings(): Promise<SystemSettings> {
+    try {
+      const existing = await this.getSystemSettings();
+      if (existing) {
+        return existing;
+      }
+
+      const result = await db
+        .insert(systemSettings)
+        .values({
+          centerName: "PlayHub",
+          systemVersion: "1.0.0",
+          totalStations: 25,
+          pcStations: 15,
+          consoleStations: 10,
+          vrStations: 0,
+          arcadeStations: 0
+        })
+        .returning();
+
+      return result[0];
+    } catch (error) {
+      console.error('Error initializing system settings:', error);
+      throw error;
     }
   }
 }

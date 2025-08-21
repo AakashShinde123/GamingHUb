@@ -7,7 +7,8 @@ import {
   insertCustomerSchema, 
   insertSessionSchema,
   insertRevenueTargetSchema,
-  insertAlertSchema 
+  insertAlertSchema,
+  insertSystemSettingsSchema
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -195,6 +196,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(201).json(target);
     } catch (error) {
       res.status(400).json({ message: "Invalid target data" });
+    }
+  });
+
+  // System Settings routes
+  app.get("/api/settings", async (req, res) => {
+    try {
+      let settings = await storage.getSystemSettings();
+      if (!settings) {
+        settings = await storage.initializeSystemSettings();
+      }
+      res.json(settings);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch system settings" });
+    }
+  });
+
+  app.patch("/api/settings", async (req, res) => {
+    try {
+      const validatedData = insertSystemSettingsSchema.partial().parse(req.body);
+      const settings = await storage.updateSystemSettings(validatedData);
+      if (!settings) {
+        return res.status(404).json({ message: "System settings not found" });
+      }
+      res.json(settings);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid settings data" });
     }
   });
 

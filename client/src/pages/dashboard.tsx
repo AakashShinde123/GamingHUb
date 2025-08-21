@@ -11,6 +11,7 @@ import { RevenueTargets } from "@/components/revenue-targets";
 import { SettingsDialog } from "@/components/settings-dialog";
 import { CheckInDialog } from "@/components/check-in-dialog";
 import { StationManagement } from "@/components/station-management";
+import { PlayHubInfo } from "@/components/playhub-info";
 import { Gamepad2, User, Bell, Settings, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -132,6 +133,11 @@ export default function Dashboard() {
         {/* Gaming Stations Management */}
         <div className="mb-8">
           <StationManagement />
+        </div>
+
+        {/* PlayHub Information */}
+        <div className="mb-8">
+          <PlayHubInfo />
         </div>
 
         {/* Recent Activity & Revenue Alerts */}

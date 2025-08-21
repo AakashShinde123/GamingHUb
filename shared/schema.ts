@@ -56,6 +56,18 @@ export const activities = pgTable("activities", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const systemSettings = pgTable("system_settings", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  centerName: text("center_name").notNull().default("PlayHub"),
+  systemVersion: text("system_version").notNull().default("1.0.0"),
+  totalStations: integer("total_stations").default(25),
+  pcStations: integer("pc_stations").default(15),
+  consoleStations: integer("console_stations").default(10),
+  vrStations: integer("vr_stations").default(0),
+  arcadeStations: integer("arcade_stations").default(0),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Insert schemas
 export const insertCustomerSchema = createInsertSchema(customers).omit({
   id: true,
@@ -87,6 +99,11 @@ export const insertActivitySchema = createInsertSchema(activities).omit({
   createdAt: true,
 });
 
+export const insertSystemSettingsSchema = createInsertSchema(systemSettings).omit({
+  id: true,
+  updatedAt: true,
+});
+
 // Types
 export type Customer = typeof customers.$inferSelect;
 export type InsertCustomer = z.infer<typeof insertCustomerSchema>;
@@ -105,6 +122,9 @@ export type InsertAlert = z.infer<typeof insertAlertSchema>;
 
 export type Activity = typeof activities.$inferSelect;
 export type InsertActivity = z.infer<typeof insertActivitySchema>;
+
+export type SystemSettings = typeof systemSettings.$inferSelect;
+export type InsertSystemSettings = z.infer<typeof insertSystemSettingsSchema>;
 
 // Additional types for API responses
 export type ActiveSession = Session & {
