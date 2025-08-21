@@ -75,13 +75,14 @@ export function ActiveCustomers() {
     <>
       <Card className="card-shadow">
         <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-3">
             <h3 className="text-lg font-semibold text-gray-900">Active Sessions</h3>
             <Button
               onClick={() => setShowCheckIn(true)}
-              className="bg-gaming-blue hover:bg-blue-700 text-white"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 text-base shadow-lg hover:shadow-xl transition-all duration-200 w-full sm:w-auto"
+              data-testid="button-checkin"
             >
-              <Plus className="w-4 h-4 mr-2" />
+              <Plus className="w-5 h-5 mr-2" />
               New Check-in
             </Button>
           </div>

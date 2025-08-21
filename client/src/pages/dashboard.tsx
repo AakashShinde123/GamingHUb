@@ -9,11 +9,14 @@ import { QuickActions } from "@/components/quick-actions";
 import { RecentActivity } from "@/components/recent-activity";
 import { RevenueTargets } from "@/components/revenue-targets";
 import { SettingsDialog } from "@/components/settings-dialog";
-import { Gamepad2, User, Bell, Settings } from "lucide-react";
+import { CheckInDialog } from "@/components/check-in-dialog";
+import { Gamepad2, User, Bell, Settings, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function Dashboard() {
   const [showSettings, setShowSettings] = useState(false);
+  const [showCheckIn, setShowCheckIn] = useState(false);
   
   const { data: alerts } = useQuery({
     queryKey: ['/api/alerts'],
@@ -83,6 +86,28 @@ export default function Dashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Quick Check-in Action */}
+        <div className="mb-6">
+          <Card className="bg-gradient-to-r from-blue-600 to-purple-600 border-0 shadow-xl">
+            <CardContent className="p-6">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="text-center sm:text-left">
+                  <h2 className="text-xl font-bold text-white mb-2">Ready to start a gaming session?</h2>
+                  <p className="text-blue-100">Check in customers quickly and start tracking their sessions</p>
+                </div>
+                <Button
+                  onClick={() => setShowCheckIn(true)}
+                  className="bg-white text-blue-600 hover:bg-blue-50 font-bold px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200 min-w-[200px]"
+                  data-testid="button-main-checkin"
+                >
+                  <Plus className="w-6 h-6 mr-2" />
+                  Start Check-in
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Alert Panel */}
         <AlertPanel />
 
@@ -111,6 +136,7 @@ export default function Dashboard() {
       </main>
 
       <SettingsDialog open={showSettings} onOpenChange={setShowSettings} />
+      <CheckInDialog open={showCheckIn} onOpenChange={setShowCheckIn} />
     </div>
   );
 }
