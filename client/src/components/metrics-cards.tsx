@@ -1,10 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
-import { DollarSign, Users, Monitor, Clock, TrendingUp, BarChart3 } from "lucide-react";
+import { DollarSign, Users, Monitor, Clock, TrendingUp } from "lucide-react";
 import type { DashboardMetrics } from "@shared/schema";
-import arcadeMachineImg from "@assets/generated_images/Pixel_arcade_machine_8b299005.png";
-import sleepingCharacterImg from "@assets/generated_images/Sleeping_pixel_character_f431f23e.png";
-import pixelAvatarsImg from "@assets/generated_images/Pixel_gaming_avatars_34d8ef3a.png";
 
 export function MetricsCards() {
   const { data: metrics, isLoading } = useQuery<DashboardMetrics>({
@@ -34,107 +31,88 @@ export function MetricsCards() {
   };
 
   return (
-    <>
-      {/* Main Paradise Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-        {/* Revenue Card */}
-        <Card className="relative overflow-hidden card-hover bg-gradient-to-br from-kawaii-mint/80 to-kawaii-sky/60 border-0 shadow-2xl float">
-          <CardContent className="p-8">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-gray-700 kawaii-text">Revenue</h3>
-              <span className="text-3xl">💰</span>
-            </div>
-            
-            {/* Simple Bar Chart */}
-            <div className="flex items-end space-x-2 h-24 mb-4">
-              <div className="bg-kawaii-sky w-4 h-8 rounded-t bounce-cute" style={{animationDelay: '0.1s'}}></div>
-              <div className="bg-kawaii-mint w-4 h-16 rounded-t bounce-cute" style={{animationDelay: '0.2s'}}></div>
-              <div className="bg-kawaii-sky w-4 h-12 rounded-t bounce-cute" style={{animationDelay: '0.3s'}}></div>
-              <div className="bg-kawaii-mint w-4 h-20 rounded-t bounce-cute" style={{animationDelay: '0.4s'}}></div>
-              <div className="bg-kawaii-sky w-4 h-14 rounded-t bounce-cute" style={{animationDelay: '0.5s'}}></div>
-            </div>
-            
-            <p className="text-2xl font-bold text-gray-700 kawaii-text">
-              {formatCurrency(metrics?.todayRevenue || 0)}
-            </p>
-            <p className="text-sm text-gray-600 flex items-center">
-              <TrendingUp className="w-3 h-3 mr-1 wiggle" />
-              +{metrics?.revenueGrowth || 0}% today
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Active Sessions Card */}
-        <Card className="relative overflow-hidden card-hover bg-gradient-to-br from-kawaii-lavender/80 to-purple-200/60 border-0 shadow-2xl float" style={{animationDelay: '0.5s'}}>
-          <CardContent className="p-8">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-gray-700 kawaii-text">Active Sessions</h3>
-              <span className="text-3xl">🎮</span>
-            </div>
-            
-            {/* Arcade Machine Image */}
-            <div className="flex justify-center mb-4">
-              <img 
-                src={arcadeMachineImg} 
-                alt="Arcade Machine" 
-                className="w-20 h-20 object-contain bounce-cute"
-              />
-            </div>
-            
-            <div className="flex items-center space-x-2 mb-2">
-              <span className="text-sm text-kawaii-lavender">🕹️</span>
-              <p className="text-2xl font-bold text-gray-700 kawaii-text">
-                {metrics?.activeCustomers || 0} Players
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      {/* Today's Revenue */}
+      <Card className="border-l-4 border-green-500 bg-white shadow-lg hover:shadow-xl transition-shadow">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Today's Revenue</p>
+              <p className="text-3xl font-bold text-gray-900">
+                {formatCurrency(metrics?.todayRevenue || 0)}
+              </p>
+              <p className="text-xs text-green-600 mt-1 flex items-center font-medium">
+                <TrendingUp className="w-3 h-3 mr-1" />
+                +{metrics?.revenueGrowth || 0}% from yesterday
               </p>
             </div>
-            <p className="text-sm text-gray-600">
-              {metrics?.totalCustomersToday || 0} total today
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Inactive Stations Card */}
-        <Card className="relative overflow-hidden card-hover bg-gradient-to-br from-kawaii-pink/60 to-kawaii-peach/60 border-0 shadow-2xl float" style={{animationDelay: '1s'}}>
-          <CardContent className="p-8">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-gray-700 kawaii-text">Inactive Stations</h3>
-              <span className="text-3xl">😴</span>
+            <div className="w-14 h-14 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-lg">
+              <DollarSign className="text-white text-xl" />
             </div>
-            
-            {/* Sleeping Character Image */}
-            <div className="flex justify-center mb-4">
-              <img 
-                src={sleepingCharacterImg} 
-                alt="Sleeping Character" 
-                className="w-20 h-20 object-contain float"
-              />
-            </div>
-            
-            <p className="text-2xl font-bold text-gray-700 kawaii-text mb-2">
-              {(metrics?.totalStations || 25) - (metrics?.occupiedStations || 0)} Stations
-            </p>
-            <p className="text-sm text-gray-600">
-              {metrics?.occupancyRate || 0}% utilization rate
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
 
-      {/* Customer Avatars Section */}
-      <div className="mb-8">
-        <h3 className="text-lg font-bold text-gray-700 kawaii-text mb-4">Customer Avatars</h3>
-        <div className="flex space-x-4">
-          <div className="w-16 h-16 bg-gradient-to-br from-kawaii-sky to-kawaii-mint rounded-xl flex items-center justify-center card-hover sparkle">
-            <span className="text-2xl">🤖</span>
+      {/* Active Customers */}
+      <Card className="border-l-4 border-blue-500 bg-white shadow-lg hover:shadow-xl transition-shadow">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Active Customers</p>
+              <p className="text-3xl font-bold text-gray-900">
+                {metrics?.activeCustomers || 0}
+              </p>
+              <p className="text-xs text-gray-500 mt-1 font-medium">
+                {metrics?.totalCustomersToday || 0} total today
+              </p>
+            </div>
+            <div className="w-14 h-14 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg">
+              <Users className="text-white text-xl" />
+            </div>
           </div>
-          <div className="w-16 h-16 bg-gradient-to-br from-kawaii-mint to-kawaii-sky rounded-xl flex items-center justify-center card-hover bounce-cute">
-            <span className="text-2xl">🛸</span>
+        </CardContent>
+      </Card>
+
+      {/* Gaming Stations */}
+      <Card className="border-l-4 border-purple-500 bg-white shadow-lg hover:shadow-xl transition-shadow">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Station Occupancy</p>
+              <p className="text-3xl font-bold text-gray-900">
+                {metrics?.occupiedStations || 0}/{metrics?.totalStations || 25}
+              </p>
+              <p className="text-xs text-purple-600 mt-1 font-medium">
+                {metrics?.occupancyRate || 0}% utilization rate
+              </p>
+            </div>
+            <div className="w-14 h-14 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg">
+              <Monitor className="text-white text-xl" />
+            </div>
           </div>
-          <div className="w-16 h-16 bg-gradient-to-br from-kawaii-sky to-kawaii-lavender rounded-xl flex items-center justify-center card-hover wiggle">
-            <span className="text-2xl">👾</span>
+        </CardContent>
+      </Card>
+
+      {/* Average Session */}
+      <Card className="border-l-4 border-orange-500 bg-white shadow-lg hover:shadow-xl transition-shadow">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Avg Session Time</p>
+              <p className="text-3xl font-bold text-gray-900">
+                {formatTime(metrics?.avgSessionTime || 0)}
+              </p>
+              <p className="text-xs text-orange-600 mt-1 flex items-center font-medium">
+                <Clock className="w-3 h-3 mr-1" />
+                +{metrics?.sessionGrowth || 0}% vs last week
+              </p>
+            </div>
+            <div className="w-14 h-14 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center shadow-lg">
+              <Clock className="text-white text-xl" />
+            </div>
           </div>
-        </div>
-      </div>
-    </>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

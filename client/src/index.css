@@ -5,25 +5,25 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(320 50% 98%);
-  --foreground: hsl(340 15% 25%);
-  --card: hsl(315 40% 96%);
-  --card-foreground: hsl(340 15% 25%);
-  --popover: hsl(320 50% 98%);
-  --popover-foreground: hsl(340 15% 25%);
-  --primary: hsl(315 70% 85%);
-  --primary-foreground: hsl(340 15% 25%);
-  --secondary: hsl(160 40% 85%);
-  --secondary-foreground: hsl(340 15% 25%);
-  --muted: hsl(310 30% 92%);
-  --muted-foreground: hsl(340 15% 45%);
-  --accent: hsl(190 45% 88%);
-  --accent-foreground: hsl(340 15% 25%);
-  --destructive: hsl(0 65% 75%);
-  --destructive-foreground: hsl(0 0% 100%);
-  --border: hsl(310 25% 88%);
-  --input: hsl(315 35% 94%);
-  --ring: hsl(315 70% 85%);
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(220 14% 11%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(220 14% 11%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(220 14% 11%);
+  --primary: hsl(221 83% 53%);
+  --primary-foreground: hsl(210 40% 98%);
+  --secondary: hsl(210 40% 96%);
+  --secondary-foreground: hsl(220 9% 46%);
+  --muted: hsl(210 40% 96%);
+  --muted-foreground: hsl(215 16% 47%);
+  --accent: hsl(210 40% 96%);
+  --accent-foreground: hsl(220 9% 46%);
+  --destructive: hsl(0 84% 60%);
+  --destructive-foreground: hsl(210 40% 98%);
+  --border: hsl(214 32% 91%);
+  --input: hsl(214 32% 91%);
+  --ring: hsl(221 83% 53%);
   --chart-1: hsl(203.8863 88.2845% 53.1373%);
   --chart-2: hsl(159.7826 100% 36.0784%);
   --chart-3: hsl(42.0290 92.8251% 56.2745%);
@@ -52,25 +52,26 @@
   --tracking-normal: 0em;
   --spacing: 0.25rem;
   
-  /* Kawaii theme colors */
-  --kawaii-pink: hsl(315 70% 85%);
-  --kawaii-mint: hsl(160 40% 85%);
-  --kawaii-peach: hsl(25 80% 88%);
-  --kawaii-lavender: hsl(270 40% 88%);
-  --kawaii-cream: hsl(45 60% 92%);
-  --kawaii-sky: hsl(190 45% 88%);
+  /* Professional theme colors */
+  --blue-500: hsl(221 83% 53%);
+  --blue-600: hsl(221 83% 45%);
+  --green-500: hsl(142 71% 45%);
+  --green-600: hsl(142 71% 35%);
+  --purple-500: hsl(262 83% 58%);
+  --purple-600: hsl(262 83% 48%);
+  --orange-500: hsl(25 95% 53%);
+  --orange-600: hsl(25 95% 43%);
   
-  /* Kawaii gradients */
-  --kawaii-gradient-1: linear-gradient(135deg, var(--kawaii-pink), var(--kawaii-peach));
-  --kawaii-gradient-2: linear-gradient(135deg, var(--kawaii-mint), var(--kawaii-sky));
-  --kawaii-gradient-3: linear-gradient(135deg, var(--kawaii-lavender), var(--kawaii-cream));
+  /* Professional gradients */
+  --gradient-1: linear-gradient(135deg, var(--blue-500), var(--purple-500));
+  --gradient-2: linear-gradient(135deg, var(--green-500), var(--blue-500));
+  --gradient-3: linear-gradient(135deg, var(--purple-500), var(--orange-500));
   
-  /* Kawaii effects */
-  --kawaii-glow: 0 0 20px rgba(255, 192, 203, 0.4);
-  --kawaii-shadow: 0 6px 25px rgba(255, 192, 203, 0.15);
-  --card-hover: 0 10px 35px rgba(255, 192, 203, 0.2);
-  --button-glow: 0 0 20px rgba(255, 192, 203, 0.5);
-  --sparkle-shadow: 0 2px 8px rgba(255, 255, 255, 0.6);
+  /* Professional effects */
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 .dark {
@@ -126,116 +127,19 @@
   }
 
   body {
-    @apply font-sans antialiased bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 text-foreground;
+    @apply font-sans antialiased bg-gray-50 text-foreground;
   }
 }
 
 @layer utilities {
-  .kawaii-gradient {
-    background: var(--kawaii-gradient-1);
-  }
-  
-  .kawaii-shadow {
-    box-shadow: var(--kawaii-shadow);
-  }
-  
   .card-shadow {
-    box-shadow: 0 4px 15px rgba(255, 192, 203, 0.1);
-  }
-  
-  .card-hover:hover {
-    box-shadow: var(--card-hover);
-    transform: translateY(-3px) scale(1.02);
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
-  
-  .button-glow:hover {
-    box-shadow: var(--button-glow);
-    transform: scale(1.05);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
   
   .gradient-text {
-    background: var(--kawaii-gradient-1);
+    background: var(--gradient-1);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-  }
-
-  .bounce-cute {
-    animation: bounce-cute 2s infinite ease-in-out;
-  }
-
-  .float {
-    animation: float 3s ease-in-out infinite;
-  }
-
-  .sparkle {
-    animation: sparkle 1.5s ease-in-out infinite alternate;
-  }
-
-  .wiggle {
-    animation: wiggle 1s ease-in-out infinite;
-  }
-
-  .kawaii-text {
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 500;
-  }
-
-  @keyframes bounce-cute {
-    0%, 20%, 50%, 80%, 100% {
-      transform: translateY(0) rotate(0deg);
-    }
-    40% {
-      transform: translateY(-8px) rotate(3deg);
-    }
-    60% {
-      transform: translateY(-4px) rotate(-2deg);
-    }
-  }
-
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-  }
-
-  @keyframes sparkle {
-    0% {
-      box-shadow: var(--sparkle-shadow);
-      opacity: 0.8;
-    }
-    100% {
-      box-shadow: 0 4px 20px rgba(255, 255, 255, 0.9);
-      opacity: 1;
-    }
-  }
-
-  @keyframes wiggle {
-    0%, 7% {
-      transform: rotateZ(0);
-    }
-    15% {
-      transform: rotateZ(-15deg);
-    }
-    20% {
-      transform: rotateZ(10deg);
-    }
-    25% {
-      transform: rotateZ(-10deg);
-    }
-    30% {
-      transform: rotateZ(6deg);
-    }
-    35% {
-      transform: rotateZ(-4deg);
-    }
-    40%, 100% {
-      transform: rotateZ(0);
-    }
   }
 }
