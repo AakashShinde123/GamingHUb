@@ -23,22 +23,22 @@ export default function Dashboard() {
   const unreadAlerts = (alerts as any[])?.filter((alert: any) => !alert.isRead) || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 font-roboto">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 font-nunito">
       {/* Header */}
-      <header className="bg-white shadow-lg border-b-4 border-gaming-purple relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-gaming-blue/5 to-gaming-purple/5"></div>
+      <header className="bg-gradient-to-r from-kawaii-pink to-kawaii-cream shadow-lg border-b-4 border-kawaii-pink relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-kawaii-lavender/10"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="flex justify-between items-center h-16">
             {/* Logo Section */}
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-gaming-purple to-gaming-orange rounded-xl flex items-center justify-center shadow-lg gaming-shadow">
-                <Gamepad2 className="text-white text-xl" />
+              <div className="w-12 h-12 bg-gradient-to-r from-kawaii-mint to-kawaii-sky rounded-full flex items-center justify-center shadow-lg kawaii-shadow float bounce-cute">
+                <Gamepad2 className="text-white text-xl wiggle" />
               </div>
               <div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-gaming-purple to-gaming-orange bg-clip-text text-transparent">
-                  PlayHub
+                <h1 className="text-2xl font-bold font-fredoka bg-gradient-to-r from-kawaii-pink to-kawaii-lavender bg-clip-text text-transparent kawaii-text">
+                  🎮 PlayHub ✨
                 </h1>
-                <p className="text-sm text-gray-600 font-medium">Revenue Management Dashboard</p>
+                <p className="text-sm text-kawaii-lavender font-medium">Kawaii Gaming Center Dashboard 💕</p>
               </div>
             </div>
 
@@ -49,7 +49,7 @@ export default function Dashboard() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setShowSettings(true)}
-                className="p-2 text-gaming-purple hover:bg-gaming-purple/10 rounded-full transition-all duration-200 hover:scale-110"
+                className="p-2 text-kawaii-lavender hover:bg-kawaii-lavender/20 rounded-full transition-all duration-200 hover:scale-110 sparkle button-glow"
               >
                 <Settings className="h-5 w-5" />
               </Button>
@@ -59,11 +59,11 @@ export default function Dashboard() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="p-2 text-gaming-orange hover:bg-orange-50 rounded-full transition-all duration-200 hover:scale-110"
+                  className="p-2 text-kawaii-peach hover:bg-kawaii-peach/20 rounded-full transition-all duration-200 hover:scale-110 bounce-cute button-glow"
                 >
                   <Bell className="h-5 w-5" />
                   {unreadAlerts.length > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-gaming-red text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+                    <span className="absolute -top-1 -right-1 bg-kawaii-pink text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-pulse wiggle">
                       {unreadAlerts.length}
                     </span>
                   )}
@@ -71,11 +71,11 @@ export default function Dashboard() {
               </div>
 
               {/* User Profile */}
-              <div className="flex items-center space-x-3 bg-gray-50 rounded-full px-3 py-2">
-                <div className="w-8 h-8 bg-gradient-to-r from-gaming-blue to-gaming-green rounded-full flex items-center justify-center">
+              <div className="flex items-center space-x-3 bg-kawaii-cream/50 rounded-full px-3 py-2 card-hover">
+                <div className="w-8 h-8 bg-gradient-to-r from-kawaii-mint to-kawaii-sky rounded-full flex items-center justify-center sparkle">
                   <User className="text-white text-sm" />
                 </div>
-                <span className="text-gray-700 font-medium">Admin</span>
+                <span className="text-kawaii-lavender font-medium kawaii-text">Admin-chan 🌸</span>
               </div>
             </div>
           </div>
