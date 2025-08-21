@@ -23,19 +23,22 @@ export function StationManagement() {
   });
   const { toast } = useToast();
 
-  const { data: stations, isLoading } = useQuery<GamingStation[]>({
+  const { data: stations, isLoading, refetch } = useQuery<GamingStation[]>({
     queryKey: ['/api/stations'],
     refetchInterval: 30000,
+    staleTime: 0, // Always consider data stale
+    gcTime: 0  // Don't cache data (replaces cacheTime in v5)
   });
 
   const createStationMutation = useMutation({
     mutationFn: async (data: any) => {
       return apiRequest('POST', '/api/stations', data);
     },
-    onSuccess: (response) => {
-      queryClient.invalidateQueries({ queryKey: ['/api/stations'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/dashboard/utilization'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/dashboard/metrics'] });
+    onSuccess: async (response) => {
+      // Force immediate refetch instead of just invalidating
+      await refetch();
+      await queryClient.invalidateQueries({ queryKey: ['/api/dashboard/utilization'] });
+      await queryClient.invalidateQueries({ queryKey: ['/api/dashboard/metrics'] });
       const stationName = formData.name;
       setShowAddDialog(false);
       setFormData({ name: "", type: "PC Gaming", hourlyRate: "", isActive: true });
