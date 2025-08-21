@@ -36,9 +36,9 @@ export default function Dashboard() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold font-fredoka bg-gradient-to-r from-kawaii-pink to-kawaii-lavender bg-clip-text text-transparent kawaii-text">
-                  🎮 PlayHub ✨
+                  🎮 PlayHub Paradise
                 </h1>
-                <p className="text-sm text-kawaii-lavender font-medium">Kawaii Gaming Center Dashboard 💕</p>
+                <p className="text-sm text-kawaii-lavender font-medium">Pixel Paradise Dashboard 💕</p>
               </div>
             </div>
 
@@ -70,12 +70,17 @@ export default function Dashboard() {
                 </Button>
               </div>
 
-              {/* User Profile */}
-              <div className="flex items-center space-x-3 bg-kawaii-cream/50 rounded-full px-3 py-2 card-hover">
-                <div className="w-8 h-8 bg-gradient-to-r from-kawaii-mint to-kawaii-sky rounded-full flex items-center justify-center sparkle">
-                  <User className="text-white text-sm" />
+              {/* Pixel Characters */}
+              <div className="flex items-center space-x-2">
+                <div className="w-10 h-10 bg-gradient-to-r from-kawaii-sky to-kawaii-mint rounded-lg flex items-center justify-center sparkle bounce-cute">
+                  <span className="text-lg">🤖</span>
                 </div>
-                <span className="text-kawaii-lavender font-medium kawaii-text">Admin-chan 🌸</span>
+                <div className="w-10 h-10 bg-gradient-to-r from-kawaii-lavender to-kawaii-pink rounded-lg flex items-center justify-center sparkle wiggle">
+                  <span className="text-lg">👾</span>
+                </div>
+                <div className="w-10 h-10 bg-gradient-to-r from-kawaii-peach to-kawaii-cream rounded-lg flex items-center justify-center sparkle float">
+                  <span className="text-lg">🎮</span>
+                </div>
               </div>
             </div>
           </div>
