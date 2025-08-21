@@ -35,6 +35,7 @@ export function PlayHubInfo() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/settings'] });
       queryClient.invalidateQueries({ queryKey: ['/api/dashboard/utilization'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/dashboard/metrics'] });
       setShowEditDialog(false);
       toast({
         title: "Success!",

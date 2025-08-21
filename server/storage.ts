@@ -450,6 +450,10 @@ export class DatabaseStorage implements IStorage {
       const tomorrow = new Date(today);
       tomorrow.setDate(tomorrow.getDate() + 1);
 
+      // Get system settings for total stations
+      const settings = await this.getSystemSettings();
+      const totalStations = settings?.totalStations || 25;
+
       // Get today's revenue
       const todaysSessionsResult = await db
         .select({
@@ -497,20 +501,24 @@ export class DatabaseStorage implements IStorage {
         activeCustomers,
         totalCustomersToday,
         occupiedStations,
-        totalStations: 25,
-        occupancyRate: Math.round((occupiedStations / 25) * 100),
+        totalStations,
+        occupancyRate: Math.round((occupiedStations / totalStations) * 100),
         avgSessionTime: 120,
         sessionGrowth: 8.2
       };
     } catch (error) {
       console.error('Error getting dashboard metrics:', error);
+      // Get system settings for fallback
+      const settings = await this.getSystemSettings();
+      const totalStations = settings?.totalStations || 25;
+      
       return {
         todayRevenue: 0,
         revenueGrowth: 0,
         activeCustomers: 0,
         totalCustomersToday: 0,
         occupiedStations: 0,
-        totalStations: 25,
+        totalStations,
         occupancyRate: 0,
         avgSessionTime: 0,
         sessionGrowth: 0
@@ -559,7 +567,11 @@ export class DatabaseStorage implements IStorage {
 
   async getStationUtilization(): Promise<StationUtilization> {
     try {
-      const totalStations = 25;
+      // Get system settings for station counts
+      const settings = await this.getSystemSettings();
+      const totalStations = settings?.totalStations || 25;
+      const pcStations = settings?.pcStations || 15;
+      const consoleStations = settings?.consoleStations || 10;
       
       const occupiedResult = await db
         .select({ count: sql<number>`COUNT(DISTINCT ${sessions.stationId})` })
@@ -595,19 +607,25 @@ export class DatabaseStorage implements IStorage {
         occupied,
         available,
         pcOccupied,
-        pcAvailable: 20 - pcOccupied,
+        pcAvailable: pcStations - pcOccupied,
         consoleOccupied,
-        consoleAvailable: 5 - consoleOccupied
+        consoleAvailable: consoleStations - consoleOccupied
       };
     } catch (error) {
       console.error('Error getting station utilization:', error);
+      // Get system settings for fallback
+      const settings = await this.getSystemSettings();
+      const totalStations = settings?.totalStations || 25;
+      const pcStations = settings?.pcStations || 15;
+      const consoleStations = settings?.consoleStations || 10;
+      
       return {
         occupied: 0,
-        available: 25,
+        available: totalStations,
         pcOccupied: 0,
-        pcAvailable: 20,
+        pcAvailable: pcStations,
         consoleOccupied: 0,
-        consoleAvailable: 5
+        consoleAvailable: consoleStations
       };
     }
   }
