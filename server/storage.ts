@@ -508,9 +508,6 @@ export class DatabaseStorage implements IStorage {
       };
     } catch (error) {
       console.error('Error getting dashboard metrics:', error);
-      // Get system settings for fallback
-      const settings = await this.getSystemSettings();
-      const totalStations = settings?.totalStations || 25;
       
       return {
         todayRevenue: 0,
@@ -518,7 +515,7 @@ export class DatabaseStorage implements IStorage {
         activeCustomers: 0,
         totalCustomersToday: 0,
         occupiedStations: 0,
-        totalStations,
+        totalStations: 25,
         occupancyRate: 0,
         avgSessionTime: 0,
         sessionGrowth: 0
@@ -613,19 +610,14 @@ export class DatabaseStorage implements IStorage {
       };
     } catch (error) {
       console.error('Error getting station utilization:', error);
-      // Get system settings for fallback
-      const settings = await this.getSystemSettings();
-      const totalStations = settings?.totalStations || 25;
-      const pcStations = settings?.pcStations || 15;
-      const consoleStations = settings?.consoleStations || 10;
       
       return {
         occupied: 0,
-        available: totalStations,
+        available: 25,
         pcOccupied: 0,
-        pcAvailable: pcStations,
+        pcAvailable: 20,
         consoleOccupied: 0,
-        consoleAvailable: consoleStations
+        consoleAvailable: 5
       };
     }
   }
