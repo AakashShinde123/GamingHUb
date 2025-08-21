@@ -30,17 +30,13 @@ export function StationManagement() {
 
   const createStationMutation = useMutation({
     mutationFn: async (data: any) => {
-      console.log('Creating station with data:', data);
-      const response = await apiRequest('POST', '/api/stations', data);
-      console.log('Station created response:', response);
-      return response;
+      return apiRequest('POST', '/api/stations', data);
     },
     onSuccess: (response) => {
-      console.log('Station creation successful:', response);
       queryClient.invalidateQueries({ queryKey: ['/api/stations'] });
       queryClient.invalidateQueries({ queryKey: ['/api/dashboard/utilization'] });
       queryClient.invalidateQueries({ queryKey: ['/api/dashboard/metrics'] });
-      const stationName = formData.name; // Use form data since we have it
+      const stationName = formData.name;
       setShowAddDialog(false);
       setFormData({ name: "", type: "PC Gaming", hourlyRate: "", isActive: true });
       toast({
@@ -49,7 +45,6 @@ export function StationManagement() {
       });
     },
     onError: (error) => {
-      console.error('Station creation error:', error);
       toast({
         title: "Error",
         description: "Failed to create gaming station. Please check all fields.",
@@ -131,7 +126,6 @@ export function StationManagement() {
       isActive: formData.isActive
     };
 
-    console.log('Submitting station data:', data);
 
     if (editingStation) {
       updateStationMutation.mutate({ id: editingStation.id, ...data });
