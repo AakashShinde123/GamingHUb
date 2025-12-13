@@ -8,9 +8,8 @@ on:
 
 env:
   NODE_VERSION: '20'
-  # NEW: Add these as GitHub Secrets for security (Settings → Secrets → Actions)
-  PREDICTIVE_FIXER_API: ${{ secrets.PREDICTIVE_FIXER_API }}  # ← ADDED: API URL from secrets
-  REPO_ID: ${{ secrets.REPO_ID }}                             # ← ADDED: Project ID from secrets
+  PREDICTIVE_FIXER_API: ${{ secrets.PREDICTIVE_FIXER_API }}
+  REPO_ID: ${{ secrets.REPO_ID }}
 
 jobs:
   test:
@@ -36,7 +35,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2  # ← ADDED: Needed to get git diff for changed files
+          fetch-depth: 2
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -47,24 +46,24 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # ← ADDED: Get changed files for Predictive Fixer
+      # FIXED: Properly format changed files as JSON array
       - name: Get changed files
         id: changes
         run: |
           if git rev-parse HEAD~1 >/dev/null 2>&1; then
-            FILES=$(git diff --name-only HEAD~1 HEAD | tr '\n' '","' | sed 's/","$//' | sed 's/^/"/' | sed 's/$/"/')
+            FILES=$(git diff --name-only HEAD~1 HEAD | jq -R -s -c 'split("\n") | map(select(length > 0))')
             ADDED=$(git diff --stat HEAD~1 HEAD | tail -1 | grep -oE '[0-9]+ insertion' | grep -oE '[0-9]+' || echo "0")
             REMOVED=$(git diff --stat HEAD~1 HEAD | tail -1 | grep -oE '[0-9]+ deletion' | grep -oE '[0-9]+' || echo "0")
           else
-            FILES='""'
+            FILES='[]'
             ADDED="0"
             REMOVED="0"
           fi
-          echo "files=[$FILES]" >> $GITHUB_OUTPUT
+          echo "files=$FILES" >> $GITHUB_OUTPUT
           echo "added=${ADDED:-0}" >> $GITHUB_OUTPUT
           echo "removed=${REMOVED:-0}" >> $GITHUB_OUTPUT
 
-      # ← ADDED: Call Predictive Fixer API for test prioritization
+      # FIXED: Correct JSON format for API call
       - name: Call Predictive Fixer API
         id: prioritize
         if: env.PREDICTIVE_FIXER_API != ''
@@ -74,16 +73,15 @@ jobs:
             -d '{
               "repo_id": "${{ env.REPO_ID }}",
               "commit_hash": "${{ github.sha }}",
+              "available_tests": [],
               "commit_info": {
                 "files_changed": ${{ steps.changes.outputs.files }},
                 "lines_added": ${{ steps.changes.outputs.added }},
                 "lines_removed": ${{ steps.changes.outputs.removed }},
                 "author": "${{ github.actor }}"
-              },
-              "available_tests": []
+              }
             }')
           echo "API Response: $RESPONSE"
-          echo "$RESPONSE" > predictive-fixer-response.json
 
       - name: TypeScript type check
         run: npm run check
@@ -102,18 +100,6 @@ jobs:
           name: dist
           path: dist/
           retention-days: 7
-
-      # ← ADDED: Report results back to Predictive Fixer
-      - name: Report results to Predictive Fixer
-        if: always() && env.PREDICTIVE_FIXER_API != ''
-        run: |
-          curl -s -X POST "${{ env.PREDICTIVE_FIXER_API }}/v1/test-results" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "repo_id": "${{ env.REPO_ID }}",
-              "commit_hash": "${{ github.sha }}",
-              "results": []
-            }' || echo "Could not report results"
 
   lint:
     name: Code Quality
